@@ -1,7 +1,7 @@
 {
   "name": "@xkeshi/vue-countdown",
   "description": "Countdown component for Vue.js.",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "main": "dist/vue-countdown.common.js",
   "module": "dist/vue-countdown.esm.js",
   "browser": "dist/vue-countdown.js",

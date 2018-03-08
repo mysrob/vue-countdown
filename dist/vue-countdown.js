@@ -1,11 +1,11 @@
 /*!
- * vue-countdown v0.5.0
+ * vue-countdown v0.6.0
  * https://github.com/xkeshi/vue-countdown
  *
- * Copyright (c) 2017 Xkeshi
+ * Copyright (c) 2018 Xkeshi
  * Released under the MIT license
  *
- * Date: 2017-11-20T03:10:33.102Z
+ * Date: 2018-03-08T19:00:30.371Z
  */
 
 (function (global, factory) {
@@ -214,10 +214,6 @@ var index = {
     this.init();
   },
   mounted: function mounted() {
-    if (this.autoStart) {
-      this.start();
-    }
-
     window.addEventListener('focus', this.onFocus = this.update.bind(this));
   },
   beforeDestroy: function beforeDestroy() {
@@ -237,12 +233,20 @@ var index = {
      * Initialize count.
      */
     init: function init() {
+      var _this2 = this;
+
       var time = this.time;
 
 
       if (time > 0) {
         this.count = time;
         this.endTime = this.now() + time;
+
+        if (this.autoStart) {
+          this.$nextTick(function () {
+            _this2.start();
+          });
+        }
       }
     },
 
@@ -271,12 +275,34 @@ var index = {
 
 
     /**
+     * Pause countdown.
+     * @public
+     * @emits Countdown#countdownpause
+     */
+    pause: function pause() {
+      if (!this.counting) {
+        return;
+      }
+
+      if (this.emitEvents) {
+        /**
+         * Countdown pause event.
+         * @event Countdown#countdownpause
+         */
+        this.$emit('countdownpause');
+      }
+
+      this.counting = false;
+    },
+
+
+    /**
      * Step to countdown.
      * @private
      * @emits Countdown#countdownprogress
      */
     step: function step() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (!this.counting) {
         return;
@@ -300,8 +326,8 @@ var index = {
 
 
         this.timeout = setTimeout(function () {
-          _this2.count -= interval;
-          _this2.step();
+          _this3.count -= interval;
+          _this3.step();
         }, interval);
       } else {
         this.count = 0;
